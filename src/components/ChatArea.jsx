@@ -40,11 +40,17 @@ export default function ChatArea({ messages = [], isTyping = false, onRetry }) {
     <main 
       ref={scrollRef}
       onScroll={handleScroll}
-      className="flex-1 overflow-y-auto bg-neutral-50 p-4 md:p-6"
+      tabIndex={0}
+      className="flex-1 overflow-y-auto bg-neutral-50 p-4 md:p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral-400"
     >
-      <div className="max-w-3xl mx-auto flex flex-col pb-4 relative">
+      <div 
+        className="max-w-3xl mx-auto flex flex-col pb-4 relative"
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {messages.length === 0 && !isTyping ? (
-          <div className="text-center text-neutral-400 text-sm mt-8">
+          <div className="text-center text-neutral-500 text-sm mt-8">
             Send a message to start the conversation.
           </div>
         ) : (

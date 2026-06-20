@@ -33,19 +33,19 @@ export const MessageBubble = ({ isUser, children, status, onRetry, shortTime, fu
           </div>
 
           {/* Meta Info: Timestamp & Status */}
-          <div className={`flex items-center gap-2 text-[11px] text-neutral-400 ${isUser ? 'justify-end' : 'justify-start'} mt-0.5 px-1`}>
+          <div className={`flex items-center gap-2 text-[11px] text-neutral-500 ${isUser ? 'justify-end' : 'justify-start'} mt-0.5 px-1`}>
             {status === 'sending' && <span>Sending...</span>}
             
             {status === 'failed' && isUser && (
               <div className="flex items-center gap-1 text-red-500 font-medium">
-                <AlertCircle size={13} />
+                <AlertCircle size={13} aria-hidden="true" />
                 <span>Failed</span>
                 <button 
                   onClick={onRetry}
-                  className="flex items-center gap-1 text-neutral-500 hover:text-neutral-800 transition-colors ml-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-400 rounded px-1"
+                  className="flex items-center gap-1 text-neutral-600 hover:text-neutral-900 transition-colors ml-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-400 rounded px-1"
                   aria-label="Retry sending message"
                 >
-                  <RefreshCw size={11} />
+                  <RefreshCw size={11} aria-hidden="true" />
                   <span>Retry</span>
                 </button>
               </div>
@@ -80,7 +80,6 @@ export const MessageItem = React.memo(({ message, onRetry }) => {
   return (
     <article 
       className="w-full"
-      role="log" 
       aria-label={`${isUser ? 'Your' : 'Bot'} message at ${fullTime || 'unknown time'}`}
     >
       <MessageBubble 

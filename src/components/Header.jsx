@@ -7,7 +7,7 @@ export default function Header({ isTyping, onClear }) {
       <div className="flex items-center gap-3">
         {/* Bot Avatar */}
         <div className="w-10 h-10 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center text-neutral-600">
-          <Bot size={22} />
+          <Bot size={22} aria-hidden="true" />
         </div>
         <div>
           <h1 className="text-lg font-semibold text-neutral-800 leading-tight">Chat Assistant</h1>
@@ -25,11 +25,11 @@ export default function Header({ isTyping, onClear }) {
       {onClear && (
         <button 
           onClick={onClear}
-          className="text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 rounded-lg p-2"
+          className="text-neutral-500 hover:text-red-600 hover:bg-red-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 rounded-lg p-2"
           aria-label="Clear chat history"
           title="Clear chat history"
         >
-          <Trash2 size={18} />
+          <Trash2 size={18} aria-hidden="true" />
         </button>
       )}
     </header>

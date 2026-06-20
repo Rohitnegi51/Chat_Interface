@@ -3,7 +3,7 @@ import { Bot } from 'lucide-react';
 
 export default function TypingIndicator() {
   return (
-    <div className="flex flex-col items-start w-full mb-4" aria-live="polite" aria-atomic="true">
+    <div className="flex flex-col items-start w-full mb-4">
       <div className="flex gap-3 flex-row max-w-[85%] md:max-w-[75%]">
         
         {/* Avatar for Bot */}

@@ -73,14 +73,14 @@ export default function ChatInput({ onSend, disabled = false }) {
           className={`flex-none w-[48px] h-[48px] mb-[1px] flex items-center justify-center rounded-xl transition-all
             ${hasContent && !disabled 
               ? 'bg-neutral-900 text-white hover:bg-neutral-800 shadow-sm' 
-              : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
+              : 'bg-neutral-200 text-neutral-500 cursor-not-allowed'
             }
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2
           `}
           aria-label="Send message"
         >
           {/* Subtle translate on X to center the Send icon visually */}
-          <Send size={18} className={hasContent ? 'translate-x-[1px] translate-y-[-1px]' : ''} />
+          <Send size={18} aria-hidden="true" className={hasContent ? 'translate-x-[1px] translate-y-[-1px]' : ''} />
         </button>
       </div>
     </footer>
