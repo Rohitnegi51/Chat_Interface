@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import MessageItem from './MessageItem';
+import TypingIndicator from './TypingIndicator';
 import { ArrowDown } from 'lucide-react';
 
-export default function ChatArea({ messages = [], onRetry }) {
+export default function ChatArea({ messages = [], isTyping = false, onRetry }) {
   const scrollRef = useRef(null);
   const [isScrolledUp, setIsScrolledUp] = useState(false);
 
@@ -25,15 +26,15 @@ export default function ChatArea({ messages = [], onRetry }) {
     setIsScrolledUp(distanceToBottom > 100);
   }, []);
 
-  // Intelligent auto-scroll on new messages
+  // Intelligent auto-scroll on new messages or typing indicator
   useEffect(() => {
-    if (!isScrolledUp && messages.length > 0) {
+    if (!isScrolledUp && (messages.length > 0 || isTyping)) {
       // requestAnimationFrame ensures the DOM has updated with the new message
       requestAnimationFrame(() => {
         scrollToBottom(true);
       });
     }
-  }, [messages, isScrolledUp, scrollToBottom]);
+  }, [messages, isTyping, isScrolledUp, scrollToBottom]);
 
   return (
     <main 
@@ -42,7 +43,7 @@ export default function ChatArea({ messages = [], onRetry }) {
       className="flex-1 overflow-y-auto bg-neutral-50 p-4 md:p-6"
     >
       <div className="max-w-3xl mx-auto flex flex-col pb-4 relative">
-        {messages.length === 0 ? (
+        {messages.length === 0 && !isTyping ? (
           <div className="text-center text-neutral-400 text-sm mt-8">
             Send a message to start the conversation.
           </div>
@@ -51,6 +52,8 @@ export default function ChatArea({ messages = [], onRetry }) {
             <MessageItem key={msg.id} message={msg} onRetry={onRetry} />
           ))
         )}
+
+        {isTyping && <TypingIndicator />}
       </div>
 
       {/* Floating Scroll Down Button */}
