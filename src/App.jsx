@@ -11,7 +11,7 @@ export default function App() {
   // Helper function to add new messages with unique IDs
   const addMessage = useCallback((text, sender = 'user', status = 'sent') => {
     const newMessage = {
-      id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+      id: (typeof crypto !== 'undefined' &&crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(),
       text,
       sender,
       timestamp: new Date().toISOString(),
