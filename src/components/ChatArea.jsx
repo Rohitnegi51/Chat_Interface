@@ -1,25 +1,69 @@
-import React from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import MessageItem from './MessageItem';
+import { ArrowDown } from 'lucide-react';
 
-export default function ChatArea() {
+export default function ChatArea({ messages = [], onRetry }) {
+  const scrollRef = useRef(null);
+  const [isScrolledUp, setIsScrolledUp] = useState(false);
+
+  const scrollToBottom = useCallback((smooth = true) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
+      setIsScrolledUp(false);
+    }
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+    
+    // Consider "scrolled up" if user is more than 100px away from the bottom
+    const distanceToBottom = scrollHeight - scrollTop - clientHeight;
+    setIsScrolledUp(distanceToBottom > 100);
+  }, []);
+
+  // Intelligent auto-scroll on new messages
+  useEffect(() => {
+    if (!isScrolledUp && messages.length > 0) {
+      // requestAnimationFrame ensures the DOM has updated with the new message
+      requestAnimationFrame(() => {
+        scrollToBottom(true);
+      });
+    }
+  }, [messages, isScrolledUp, scrollToBottom]);
+
   return (
-    <main className="flex-1 overflow-y-auto bg-neutral-50 p-4 md:p-6 scroll-smooth">
-      <div className="max-w-3xl mx-auto flex flex-col gap-4">
-        {/* Placeholder for messages */}
-        <div className="text-center text-neutral-400 text-sm mt-8">
-          Chat Area Layout placeholder
-        </div>
-        
-        {/* Dummy message bubbles to demonstrate scrollable layout */}
-        <div className="self-end max-w-[85%] md:max-w-[75%] bg-neutral-900 text-white rounded-2xl rounded-tr-sm px-4 py-3">
-          User message placeholder
-        </div>
-        <div className="self-start max-w-[85%] md:max-w-[75%] bg-white border border-neutral-200 text-neutral-800 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
-          Bot message placeholder
-        </div>
-        <div className="self-end max-w-[85%] md:max-w-[75%] bg-neutral-900 text-white rounded-2xl rounded-tr-sm px-4 py-3">
-          Another user message placeholder to show flex column flow.
-        </div>
+    <main 
+      ref={scrollRef}
+      onScroll={handleScroll}
+      className="flex-1 overflow-y-auto bg-neutral-50 p-4 md:p-6"
+    >
+      <div className="max-w-3xl mx-auto flex flex-col pb-4 relative">
+        {messages.length === 0 ? (
+          <div className="text-center text-neutral-400 text-sm mt-8">
+            Send a message to start the conversation.
+          </div>
+        ) : (
+          messages.map(msg => (
+            <MessageItem key={msg.id} message={msg} onRetry={onRetry} />
+          ))
+        )}
       </div>
+
+      {/* Floating Scroll Down Button */}
+      {isScrolledUp && (
+        <button
+          onClick={() => scrollToBottom(true)}
+          className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-white border border-neutral-200 shadow-md text-neutral-600 rounded-full py-2 px-3 hover:bg-neutral-50 hover:text-neutral-900 transition-colors z-20 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+          aria-label="Scroll to newest messages"
+        >
+          <ArrowDown size={16} />
+          <span className="text-sm font-medium pr-1">New messages</span>
+        </button>
+      )}
     </main>
   );
 }
