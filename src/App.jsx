@@ -2,9 +2,11 @@ import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
 import ChatArea from './components/ChatArea';
 import ChatInput from './components/ChatInput';
+import { useLocalStorage } from './hooks/useLocalStorage';
 
 export default function App() {
-  const [messages, setMessages] = useState([]);
+  // Persist messages in localStorage securely
+  const [messages, setMessages] = useLocalStorage('chat_assistant_messages', []);
   const [isTyping, setIsTyping] = useState(false);
 
   // Helper function to add new messages with unique IDs
@@ -19,7 +21,7 @@ export default function App() {
     
     setMessages(prev => [...prev, newMessage]);
     return newMessage.id;
-  }, []);
+  }, [setMessages]);
 
   const handleSendMessage = useCallback((text) => {
     // 1. Immediately add user message
@@ -46,9 +48,15 @@ export default function App() {
 
   }, [addMessage]);
 
+  const clearChat = useCallback(() => {
+    if (window.confirm("Are you sure you want to clear the chat history?")) {
+      setMessages([]);
+    }
+  }, [setMessages]);
+
   return (
     <div className="flex flex-col h-full w-full bg-neutral-50 text-neutral-900 overflow-hidden">
-      <Header isTyping={isTyping} />
+      <Header isTyping={isTyping} onClear={clearChat} />
       
       <ChatArea messages={messages} isTyping={isTyping} />
       
